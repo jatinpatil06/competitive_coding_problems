@@ -18,7 +18,7 @@ public:
         return answers;
     }
     */
-    //Optimal Force Approach
+    //Optimal Approach
     void generate(string s, int open, int close, int n, vector<string> &answers){
         if(s.length() == 2 * n)   answers.push_back(s);
         if(open < n)    generate(s + "(", open + 1, close, n, answers);

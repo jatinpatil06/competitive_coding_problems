@@ -1,14 +1,17 @@
-vector<int> num_of_ways(46, -1);
 class Solution {
 public:
-    int climbing(int n)
-    {
-        if(num_of_ways[n] != -1)    return num_of_ways[n];
-        return num_of_ways[n] = climbing(n - 1) + climbing (n - 2);
+    int climb(vector<int> &ways, int n){
+        if(ways[n] != -1)   return ways[n];
+        else{
+            ways[n] = climb(ways, n - 1) + climb(ways, n - 2);
+            return ways[n];
+        }
     }
     int climbStairs(int n) {
-        num_of_ways[0] = 1;
-        num_of_ways[1] = 1;
-        return climbing(n);
+        vector<int> ways(46, -1);
+        ways[1] = 1;
+        ways[2] = 2;
+        climb(ways, n);
+        return ways[n];
     }
 };

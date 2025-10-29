@@ -1,5 +1,7 @@
 class Solution {
 public:
+    /*
+    MEMOIZATION APPROACH
     int robbing(vector<int> &nums, vector<int> &max_profit, int n){
         if(n < 0)   return 0;
         if(n == 0)  return nums[0];
@@ -15,4 +17,18 @@ public:
         vector<int> max_profit(n, -1);
         return robbing(nums, max_profit, n - 1);
     }
+    TABULATION APPROACH
+    int rob(vector<int>& arr){
+        int n = arr.size();
+        vector<int> dp(n, -1);
+        dp[0] = arr[0];
+        for(int i = 1; i < n; i++){
+            int pick = arr[i];
+            if(i >= 2)  pick += dp[i - 2];
+            int not_pick = dp[i - 1];
+            dp[i] = max(pick, not_pick);
+        }
+        return dp[n - 1];
+    }
+    */
 };

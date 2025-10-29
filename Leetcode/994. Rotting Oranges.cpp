@@ -1,42 +1,45 @@
+#define fresh 1
+#define rotten 2
 class Solution {
 public:
+    bool isValid(vector<vector<int>>& grid, int x, int y){
+        int m = grid.size(), n = grid[0].size();
+        if(x >= 0 && x < m && y >= 0 && y < n && grid[x][y] == fresh)   return true;
+        return false;
+    }
+
     int orangesRotting(vector<vector<int>>& grid) {
-        int minutesElapsed = 0, m = grid.size(), n = grid[0].size(), freshOranges = 0;
-        queue<pair<int, int>> qu;
-        //finding all the rotten oranges initially
-        for(int i = 0; i < m; i++)
+        queue<pair<int, int>>   qu;
+        int fresh_oranges = 0;
+        int m = grid.size(), n = grid[0].size();
+        int dx[4] = {-1, 0, 1, 0};
+        int dy[4] = {0, 1, 0, -1};
+        for(int i = 0; i < m; i++){
             for(int j = 0; j < n; j++){
-                if(grid[i][j] == 2) qu.push({i, j});
-                else if(grid[i][j] == 1)    freshOranges++;
+                if(grid[i][j] == fresh) fresh_oranges++;
+                if(grid[i][j] == rotten)    qu.push({i, j}); 
             }
-        if(qu.empty() && freshOranges == 0)  return 0;
-        //now we will start rotting them each minute
+        }
+        if(fresh_oranges == 0 && qu.size() == 0)    return 0;
+        int minutes_elapsed = 0;
         while(!qu.empty()){
-            //we have to pop only those oranges that are scheduled to rot in this minute
-            int num_of_oranges_this_min = qu.size();
-            for(int i = 0; i < num_of_oranges_this_min; i++){
-                pair<int, int> coords = qu.front();
+            int curr_rotten_oranges = qu.size();
+            for(int i = 0; i< curr_rotten_oranges; i++){
+                pair<int, int> curr_coord = qu.front();
                 qu.pop();
-                int x = coords.first;
-                int y = coords.second;
-                //now we will add the oranges that are to be rotten in the next minute to the queue
-                int dx[4] = {-1, 0, 1, 0};
-                int dy[4] = {0, 1, 0, -1};
                 for(int z = 0; z < 4; z++){
-                    int new_x = x + dx[z];
-                    int new_y = y + dy[z];
-                    if(new_x < 0 || new_x >= m || new_y < 0 || new_y >= n || grid[new_x][new_y] != 1)   continue;
-                    else{
-                        grid[new_x][new_y] = 2;
-                        qu.push({new_x, new_y});
-                        freshOranges--;
+                    int x = curr_coord.first + dx[z];
+                    int y = curr_coord.second + dy[z];
+                    if(isValid(grid, x, y)){
+                        fresh_oranges--;
+                        grid[x][y] = rotten;
+                        qu.push({x, y});
                     }
                 }
             }
-            minutesElapsed++;
+            minutes_elapsed++;
         }
-        //if all oranges aren't rotten
-        if(freshOranges != 0)   return -1;
-        return minutesElapsed - 1;
+        return fresh_oranges != 0 ? -1 : minutes_elapsed - 1;
+        //we do not consider the last minute because there is no rotting happening then, everything is already rotten
     }
 };

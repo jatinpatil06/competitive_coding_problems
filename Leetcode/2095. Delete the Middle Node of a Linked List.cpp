@@ -26,5 +26,19 @@ public:
         else
             nodes[middle - 1] -> next = nodes[middle] -> next;
         return head;
+
+        /*
+            Single Pass deletion
+            if(head -> next == NULL)    return NULL;
+            ListNode *prev = head, *slow = head, *fast = head -> next;
+            while(fast != NULL){
+                prev = slow;
+                slow = slow -> next;
+                fast = fast -> next;
+                if(fast)    fast = fast -> next;
+            }
+            prev -> next = slow -> next;
+            return head;
+        */
     }
 };

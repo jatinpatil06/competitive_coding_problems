@@ -10,22 +10,36 @@
  */
 class Solution {
 public:
-    ListNode* removeNthFromEnd(ListNode* head, int n) {
-        vector<ListNode*> addrs;
-        ListNode* temp = head;
-        while(temp != NULL)
-        {
-            addrs.push_back(temp);
+    int list_len(ListNode *head){
+        ListNode *temp = head;
+        int len = 0;
+        while(temp){
+            len++;
             temp = temp -> next;
         }
-        int size = addrs.size();
-        int k = size - n;
-        if(k == 0)
-            return head -> next;
-        else if(k == size - 1)
-            addrs[k - 1] -> next = NULL;
-        else
-            addrs[k - 1] -> next = addrs[k] -> next;
+        return len;
+    }
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        /*  Brute force approach with TC = O(2N)
+        int len = list_len(head);
+        if(n == len)   return head -> next;
+        ListNode *temp = head;
+        for(int i = 1; i < len - n; i++)    temp = temp -> next;
+        temp -> next = temp -> next -> next;
+        return head;
+            An optimal approach would be to do this in one pass.
+        */
+        ListNode *slow = head, *fast = head;
+        while(n){
+            fast = fast -> next;
+            n--;
+        }
+        if(!fast)   return head -> next;
+        while(fast -> next){
+            slow = slow -> next;
+            fast = fast -> next;
+        }
+        slow -> next = slow -> next -> next;
         return head;
     }
 };

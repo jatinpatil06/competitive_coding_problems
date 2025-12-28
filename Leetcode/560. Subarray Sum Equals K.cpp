@@ -1,14 +1,24 @@
 class Solution {
 public:
     int subarraySum(vector<int>& nums, int k) {
-        int n = nums.size(), count = 0, sum = 0;
-        unordered_map<int, int> prefix_map;
-        prefix_map[0] = 1;
+        int n = nums.size(), count = 0;
+        /*  Brute Force TC = O(N^2)
+        for(int i = 0; i < n; i++){
+            int sum = 0;
+            for(int j = i; j < n; j++){
+                sum += nums[j];
+                if(sum == k)    count++;
+            }
+        }
+            An optimal approach would be to use prefix sums TC = O(N)
+        */
+        int sum = 0;
+        unordered_map<int, int>mp;
+        mp[0] = 1;
         for(int i = 0; i < n; i++){
             sum += nums[i];
-            //check whether any prefix sums exist till now which can be subtracted from the current prefix sum to get a subarray with sum = k
-            if(prefix_map.find(sum - k) != prefix_map.end())   count += prefix_map[sum - k];
-            prefix_map[sum] += 1;
+            if(mp.find(sum - k) != mp.end())    count += mp[sum - k];
+            mp[sum] += 1;
         }
         return count;
     }

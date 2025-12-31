@@ -1,20 +1,21 @@
 class Solution {
   public:
-    // Function to find the maximum number of meetings that can
-    // be performed in a meeting room.
+    static bool customComparator(vector<int> &a, vector<int> &b){
+        if(a[1] == b[1])    return a[0] < b[0];
+        return a[1] < b[1];
+    }
     int maxMeetings(vector<int>& start, vector<int>& end) {
-        vector<pair<int, int>> meetings;
-        for(int i = 0; i < start.size(); i++)   meetings.push_back({start[i], end[i]});
-        sort(meetings.begin(), meetings.end(), [] (const pair<int, int> &a, const pair<int, int> &b){
-            if(a.second == b.second)    return a.first < b.first;
-            return a.second < b.second;
-        });
-        vector<pair<int, int>> non_overlapping_meets;
-        non_overlapping_meets.push_back(meetings[0]);
-        for(int i = 1; i < meetings.size(); i++){
-            if(meetings[i].first > non_overlapping_meets.back().second)
-                non_overlapping_meets.push_back(meetings[i]);
+        vector<vector<int>> intervals;
+        int n = start.size();
+        for(int i = 0; i < n; i++)  intervals.push_back({start[i], end[i]});
+        sort(intervals.begin(), intervals.end(), customComparator);
+        int count = 1, lastEndTime = intervals[0][1];
+        for(int i = 1; i < n; i++){
+            if(lastEndTime < intervals[i][0]){
+                count++;
+                lastEndTime = intervals[i][1];
+            }   
         }
-        return non_overlapping_meets.size();
+        return count;
     }
 };
